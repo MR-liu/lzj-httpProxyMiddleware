@@ -1,9 +1,10 @@
-const httpProxyMiddleware = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = (proxy) => {
   const proxyMiddlewares = [];
   // Avoid 'proxy' declaration with const
   let _proxy = proxy;
+
 
   if (_proxy) {
     /**
@@ -46,6 +47,8 @@ module.exports = (proxy) => {
       });
     }
 
+    // console.log('_proxy', _proxy)
+
     /**
      * Assume a proxy configuration specified as:
      * proxy: [
@@ -58,7 +61,7 @@ module.exports = (proxy) => {
     _proxy.forEach((proxyConfig) => {
       const context = proxyConfig.context || proxyConfig.path;
       if (proxyConfig.target) {
-        proxyMiddlewares.push(httpProxyMiddleware(context, proxyConfig));
+        proxyMiddlewares.push(createProxyMiddleware(context, proxyConfig));
       }
     });
   }
